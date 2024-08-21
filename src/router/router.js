@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'; // vue router 불�
 
 import MainPage from '../pages/MainPage.vue'; // 메인 페이지
 import MemberSignupPage from '../pages/MemberSignupPage.vue'; // 회원가입 페이지
+import MemberLoginPage from '../pages/MemberLoginPage.vue'; // 로그인 페이지
 
 // 라우터 인스턴스를 생성해서 router 변수에 할당
 const router = createRouter({
@@ -11,6 +12,7 @@ const router = createRouter({
     // {path: '', component: Component}의 객체로 라우터가 사용할 경로와 컴포넌트(페이지)를 정의
     { path: '/', component: MainPage },
     { path: '/member/signup', component: MemberSignupPage },
+    { path: '/member/login', component: MemberLoginPage },
   ],
 });
 
