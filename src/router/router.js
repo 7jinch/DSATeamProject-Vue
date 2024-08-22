@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'; // vue router 불�
 import MainPage from '../pages/MainPage.vue'; // 메인 페이지
 import MemberSignupPage from '../pages/MemberSignupPage.vue'; // 회원가입 페이지
 import MemberLoginPage from '../pages/MemberLoginPage.vue'; // 로그인 페이지
+import MemberFindPasswordPage from '../pages/MemberFindPasswordPage.vue'; // 비밀번호 찾기 페이지
 
 // 라우터 인스턴스를 생성해서 router 변수에 할당
 const router = createRouter({
@@ -13,6 +14,7 @@ const router = createRouter({
     { path: '/', component: MainPage },
     { path: '/member/signup', component: MemberSignupPage },
     { path: '/member/login', component: MemberLoginPage },
+    { path: '/member/findpassword', component: MemberFindPasswordPage },
   ],
 });
 

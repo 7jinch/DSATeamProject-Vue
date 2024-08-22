@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'; // pinia 불러오기
 import axios from 'axios';
 
-import Cookies from 'js-cookie';
+import VueCookies from 'vue-cookies'; // VueCookies 가져오기
 
 // store 만들기
 export const useStore = defineStore('store', {
@@ -19,7 +19,6 @@ export const useStore = defineStore('store', {
       email: '',
       name: '',
       isLoggedIn: false,
-      cookies: '',
     },
   }),
 
@@ -72,11 +71,10 @@ export const useStore = defineStore('store', {
           withCredentials: true, // reponse시 쿠키가 있으면 받음
         })
         .then((response) => {
-          this.loggedInUser.email = response.data.email;
-          this.loggedInUser.name = response.data.name;
-          this.loggedInUser.isLoggedIn = true;
-          this.loggedInUser.cookies = Cookies.get('ourpreciousmember');
-
+          this.loggedInUser.email = response.data.email; // 상태값에 이메일 정보 저장
+          this.loggedInUser.name = response.data.name; // 상태갑에 이름 정보 저장
+          this.loggedInUser.isLoggedIn = true; // 상태값에 로그인 상태로 저장
+          // this.loggedInUser.cookies = VueCookies.get('ourpreciousmember'); // 상태값에 쿠키를 저장
           const res = {
             response,
             isTrue: true,
@@ -89,12 +87,37 @@ export const useStore = defineStore('store', {
         });
     },
 
-    // 로그인 한 유저 정보 클리어하는 메서드
-    clearLoggedInUser() {
-      this.loggedInUser.email = '';
-      this.loggedInUser.name = '';
-      this.loggedInUser.isLoggedIn = false;
-      this.loggedInUser.cookies = '';
+    // 로그아웃 메서드
+    logout() {
+      VueCookies.remove('ourpreciousmember'); // 브라우저에 저장된 쿠키 삭제
+      this.loggedInUser.email = ''; // 이메일 정보 삭제
+      this.loggedInUser.name = ''; // 이름 정보 삭제
+      this.loggedInUser.isLoggedIn = false; // 로그아웃 상태로 만들기
     },
+
+    // 비밀번호 찾기 메서드
+    async findPassword(findPasswordMemberData) {
+      const url = import.meta.env.VITE_SPRING_BOOT_URL + '';
+
+      await axios
+        .post(url, findPasswordMemberData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          return true;
+        })
+        .catch((error) => {
+          const errors = error.response.data;
+          return errors;
+        });
+    },
+  },
+
+  // pinia의 상태값을 localstorage에 저장하기
+  persist: {
+    enable: true,
+    strategies: [{ storage: localStorage }],
   },
 });

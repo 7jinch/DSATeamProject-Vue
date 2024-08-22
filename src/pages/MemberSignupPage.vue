@@ -1,44 +1,113 @@
 <template>
-  <div id="member-signup-page" class="main-container">
+  <div id="member-signup-page" class="main-container member-signup-page">
     <div id="member-signup-page-title">회원가입</div>
-    <form id="member-signup-form">
-      <label for="member-email">이메일(추후 아이디로 활용됩니다.)</label>
-      <input id="member-email" type="text" v-model="tmpEmail" /> @
-      <input id="member-email-dotcom" type="text" v-model="dotComValue" />
-      <select id="member-select-email" v-model="selectedDotComValue">
-        <option value="" selected>---이메일을 선택하세요---</option>
-        <option value="directInput">직접 입력하기</option>
-        <option value="naver.com">네이버</option>
-        <option value="daum.net">다음</option>
-        <option value="google.com">구글</option>
-      </select>
-      <div id="member-email-error" v-text="errorMessage.email"></div>
-      <br />
+    <form id="member-signup-form" class="member-signup-form">
+      <label for="member-email">이메일</label>
+      <div id="member-email-form" class="member-signup-input">
+        <input
+          id="member-email"
+          type="text"
+          placeholder="추후 아이디로 활용돼요"
+          v-model="tmpEmail"
+        />
+        @
+        <input id="member-email-dotcom" type="text" v-model="dotComValue" />
+        <select id="member-select-email" v-model="selectedDotComValue">
+          <option value="" disabled selected>---이메일을 선택하세요---</option>
+          <option value="directInput">직접 입력하기</option>
+          <option value="naver.com">네이버</option>
+          <option value="daum.net">다음</option>
+          <option value="google.com">구글</option>
+        </select>
+        <div
+          id="member-email-error"
+          class="member-signup-error"
+          v-text="errorMessage.email"
+        ></div>
+      </div>
       <label for="member-password">비밀번호</label>
-      <input
-        id="member-password"
-        type="password"
-        v-model="inputText.password"
-      />
-      <div id="member-password-error" v-text="errorMessage.password"></div>
-      <br />
+      <div id="member-password-form" class="member-signup-input">
+        <input
+          id="member-password"
+          type="password"
+          placeholder="6자-12자로 입력해 주세요"
+          v-model="inputText.password"
+        />
+        <div
+          id="member-password-error"
+          class="member-signup-error"
+          v-text="errorMessage.password"
+        ></div>
+      </div>
       <label for="member-name">이름</label>
-      <input id="member-name" type="text" v-model="inputText.name" />
-      <div id="member-name-error" v-text="errorMessage.name"></div>
-      <br />
+      <div id="member-name-form" class="member-signup-input">
+        <input
+          id="member-name"
+          type="text"
+          placeholder="6자-12자로 입력해 주세요"
+          v-model="inputText.name"
+        />
+        <div
+          id="member-name-error"
+          class="member-signup-error"
+          v-text="errorMessage.name"
+        ></div>
+      </div>
       <label for="member-birth">생년월일</label>
-      <input id="member-birth" type="date" v-model="inputText.birth" />
-      <div id="member-birth-error" v-text="errorMessage.birth"></div>
-      <br />
+      <div id="member-birth-form" class="member-signup-input">
+        <input id="member-birth" type="date" v-model="inputText.birth" />
+        <div id="member-birth-error" v-text="errorMessage.birth"></div>
+      </div>
       <label for="member-phone">휴대전화 번호</label>
-      <input id="member-phone" type="text" v-model="inputText.phone_number" />
-      <div id="member-phone-error" v-text="errorMessage.phone_number"></div>
-      <br />
+      <div id="member-phone-form" class="member-signup-input">
+        <input
+          id="member-phone"
+          type="text"
+          placeholder="예시) 000-0000-0000"
+          v-model="inputText.phone_number"
+        />
+        <div
+          id="member-phone-error"
+          class="member-signup-error"
+          v-text="errorMessage.phone_number"
+        ></div>
+      </div>
       <label for="member-gender">성별</label>
-      <input id="member-gender" type="text" v-model="inputText.gender" />
-      <div id="member-gender-error" v-text="errorMessage.gender"></div>
+      <div id="member-gender-form" class="member-signup-input">
+        <input id="member-gender" type="text" v-model="inputText.gender" />
+        <div
+          id="member-gender-error"
+          class="member-signup-error"
+          v-text="errorMessage.gender"
+        ></div>
+      </div>
+      <label for="member-question-answer"
+        >비밀번호 찾기 질문: {{ inputText.question }}</label
+      >
+      <div id="member-question-answer" class="member-signup-input">
+        <select id="member-select-question" v-model="inputText.question">
+          <option value="" disabled>---질문을 선택하세요---</option>
+          <option>보물 1호</option>
+          <option>어머니 고향</option>
+          <option>주 교통수단</option>
+          <option>태어난 곳</option>
+        </select>
+        <input
+          id="member-question-answer"
+          class="member-question-answer"
+          type="text"
+          placeholder="답변을 입력해주세요"
+          v-model="inputText.answer"
+        />
+        <div
+          id="member-question-answer-error"
+          class="member-signup-error"
+          v-if="errorMessage.answer"
+          v-text="errorMessage.answer"
+        ></div>
+      </div>
     </form>
-    <div id="signup-button-box">
+    <div id="signup-button-box" class="signup-button-box">
       <input
         id="member-signup-button"
         type="button"
@@ -70,6 +139,8 @@ const inputText = ref({
   birth: '',
   phone_number: '',
   gender: '',
+  question: '',
+  answer: '',
 });
 const tmpEmail = ref('');
 const dotComValue = ref('');
@@ -81,9 +152,10 @@ const errorMessage = ref({
   birth: '',
   phone_number: '',
   gender: '',
+  answer: '',
 });
 
-// input 태그 초기화 함수
+// errorMessage 초기화 함수
 const initialization = () => {
   errorMessage.value.email = '';
   errorMessage.value.password = '';
@@ -91,6 +163,7 @@ const initialization = () => {
   errorMessage.value.birth = '';
   errorMessage.value.phone_number = '';
   errorMessage.value.gender = '';
+  errorMessage.value.answer = '';
 };
 
 const signupCheck = async () => {
@@ -103,6 +176,7 @@ const signupCheck = async () => {
   const yesterday = new Date(today.getTime() - oneDayInMillis);
   const birtDate = new Date(inputText.value.birth);
 
+  // 입력한 이메일 검사
   if (inputText.value.email === '') {
     initialization();
     errorMessage.value.email = '이메일은 필수로 입력해 주세요.';
@@ -111,7 +185,9 @@ const signupCheck = async () => {
     initialization();
     errorMessage.value.email = '이메일의 형식에 맞춰서 입력해 주세요.';
     return;
-  } else if (inputText.value.password === '') {
+  }
+  // 입력한 비밀번호 검사
+  else if (inputText.value.password === '') {
     initialization();
     errorMessage.value.password = '비밀번호는 필수로 입력해 주세요.';
     return;
@@ -120,7 +196,9 @@ const signupCheck = async () => {
     errorMessage.value.password =
       '비밀번호는 6자에서 12자 사이로 입력해 주세요.';
     return;
-  } else if (inputText.value.name === '') {
+  }
+  // 입력한 이름 검사
+  else if (inputText.value.name === '') {
     initialization();
     errorMessage.value.name = '이름은 필수로 입력해 주세요.';
     return;
@@ -129,7 +207,9 @@ const signupCheck = async () => {
     errorMessage.value.name =
       '이름은 6자에서 12자 사이의 한글, 영문, 숫자로 입력해 주세요.';
     return;
-  } else if (inputText.value.birth === '') {
+  }
+  // 입력한 생년월일 검사
+  else if (inputText.value.birth === '') {
     initialization();
     errorMessage.value.birth = '생년월일은 필수로 입력해 주세요.';
     return;
@@ -137,7 +217,9 @@ const signupCheck = async () => {
     initialization();
     errorMessage.value.birth = '오늘 이전의 날짜만 선택할 수 있어요.';
     return;
-  } else if (inputText.value.phone_number === '') {
+  }
+  // 입력한 전화번호 검사
+  else if (inputText.value.phone_number === '') {
     initialization();
     errorMessage.value.phone_number = '전화번호는 필수로 입력해 주세요.';
     return;
@@ -147,9 +229,25 @@ const signupCheck = async () => {
     errorMessage.value.phone_number =
       '전화번호의 형식에 맞춰서 입력해 주세요. (예시. 000-0000-0000)';
     return;
-  } else if (inputText.value.gender === '') {
+  }
+  // 입력한 성별 검사
+  else if (inputText.value.gender === '') {
     initialization();
     errorMessage.value.gender = '성별은 필수로 입력해 주세요.';
+    return;
+  }
+  // 입력한 질문과 답변 검사
+  else if (inputText.value.question === '') {
+    initialization();
+    errorMessage.value.answer = '질문을 선택해 주세요.';
+    return;
+  } else if (inputText.value.answer === '') {
+    initialization();
+    errorMessage.value.answer = '답변은 필수로 입력해 주세요.';
+    return;
+  } else if (inputText.value.answer.length > 30) {
+    initialization();
+    errorMessage.value.answer = '답변은 30자 이내로 입력해 주세요.';
     return;
   }
 
@@ -165,9 +263,7 @@ const signupCheck = async () => {
   }
 };
 
-const moveHome = () => {
-  tmpRouter.push('/');
-};
+const moveHome = () => tmpRouter.push('/');
 
 watch(
   [tmpEmail, selectedDotComValue, dotComValue],
@@ -186,4 +282,29 @@ watch(
 );
 </script>
 
-<style></style>
+<style scope>
+.main-container {
+  gap: 50px;
+}
+
+.member-signup-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+
+  width: 50%;
+}
+
+.member-signup-input {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.signup-button-box {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+</style>

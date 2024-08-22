@@ -4,4 +4,4 @@
 
 <script setup></script>
 
-<style></style>
+<style scope></style>
