@@ -18,7 +18,15 @@ export const useStore = defineStore('store', {
     loggedInUser: {
       email: '',
       name: '',
+      birth: '',
+      signupDate: '',
+      phoneNumber: '',
+      gender: '',
+      question: '',
+      answer: '',
+      messages: '',
       isLoggedIn: false,
+      cookies: '',
     },
   }),
 
@@ -46,16 +54,11 @@ export const useStore = defineStore('store', {
             'Content-Type': 'application/json',
           },
         })
-        .then((response) => {
-          const res = {
-            response,
-            isTrue: true,
-          };
-          return res;
-        })
+        .then((response) => true)
         .catch((error) => {
-          const errors = error.response.data;
-          return errors;
+          const errorData = error.response.data;
+          this.updateServerMessage(errorData);
+          return;
         });
     },
 
@@ -72,18 +75,23 @@ export const useStore = defineStore('store', {
         })
         .then((response) => {
           this.loggedInUser.email = response.data.email; // 상태값에 이메일 정보 저장
-          this.loggedInUser.name = response.data.name; // 상태갑에 이름 정보 저장
+          this.loggedInUser.name = response.data.name; // 상태값에 이름 정보 저장
+          this.loggedInUser.birth = response.data.birth; // 상태값에 생년월일 정보 저장
+          this.loggedInUser.signupDate = response.data.signupDate; // 상태값에 가입일 정보 저장
+          this.loggedInUser.phoneNumber = response.data.phoneNumber; // 상태값에 전화번호 정보 저장
+          this.loggedInUser.gender = response.data.gender; // 상태값에 성별 저장
+          this.loggedInUser.question = response.data.question; // 상태값에 질문 정보 저장
+          this.loggedInUser.answer = response.data.answer; // 상태값에 답변 저장
+          this.loggedInUser.messages = response.data.messages;
           this.loggedInUser.isLoggedIn = true; // 상태값에 로그인 상태로 저장
-          // this.loggedInUser.cookies = VueCookies.get('ourpreciousmember'); // 상태값에 쿠키를 저장
-          const res = {
-            response,
-            isTrue: true,
-          };
-          return res;
+          this.loggedInUser.cookies = VueCookies.get('ourpreciousmember'); // 상태값에 쿠키를 저장
+
+          return true;
         })
         .catch((error) => {
-          const errors = error.response.data;
-          return errors;
+          const errorData = error.response.data;
+          this.updateServerMessage(errorData);
+          return;
         });
     },
 
@@ -92,25 +100,76 @@ export const useStore = defineStore('store', {
       VueCookies.remove('ourpreciousmember'); // 브라우저에 저장된 쿠키 삭제
       this.loggedInUser.email = ''; // 이메일 정보 삭제
       this.loggedInUser.name = ''; // 이름 정보 삭제
+      this.loggedInUser.birth = ''; // 생년월일 정보 저장
+      this.loggedInUser.signupDate = ''; // 가입일 정보 삭제
+      this.loggedInUser.phoneNumber = ''; // 전화번호 정보 삭제
+      this.loggedInUser.gender = ''; // 성별 정보 삭제
+      this.loggedInUser.question = ''; // 질문 정보 삭제
+      this.loggedInUser.answer = ''; // 답변 정보 삭제
+      this.loggedInUser.messages = ''; // 상태 메시지 정보 삭제
       this.loggedInUser.isLoggedIn = false; // 로그아웃 상태로 만들기
+      this.loggedInUser.cookies = ''; // 쿠키 지우기
     },
 
     // 비밀번호 찾기 메서드
     async findPassword(findPasswordMemberData) {
-      const url = import.meta.env.VITE_SPRING_BOOT_URL + '';
+      const url =
+        import.meta.env.VITE_SPRING_BOOT_URL + '/api/auth/findpassword';
 
-      await axios
+      return await axios
         .post(url, findPasswordMemberData, {
           headers: {
             'Content-Type': 'application/json',
           },
         })
-        .then((response) => {
-          return true;
-        })
+        .then((response) => true)
         .catch((error) => {
-          const errors = error.response.data;
-          return errors;
+          const errorData = error.response.data;
+          this.updateServerMessage(errorData);
+          return;
+        });
+    },
+
+    // 비밀번호 수정 메서드
+    async changePassword(changePasswordData) {
+      const url =
+        import.meta.env.VITE_SPRING_BOOT_URL + '/api/auth/resetpassword';
+
+      return await axios
+        .post(url, changePasswordData, {
+          headers: {
+            'Content-type': 'application/json',
+          },
+        })
+        .then((response) => true)
+        .catch((error) => {
+          const errorData = error.response.data;
+          this.updateServerMessage(errorData);
+          return;
+        });
+    },
+
+    // 발급받은 jwt 토큰이 유효한지 검사
+    async validateJwtToken(email) {
+      const url = import.meta.env.VITE_SPRING_BOOT_URL + '/api/auth/validate';
+
+      return await axios
+        .post(
+          url,
+          { email: email },
+          {
+            headers: {
+              Authorization: `Bearer ${this.loggedInUser.cookies}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => true)
+        .catch((error) => {
+          const errorData = error.response.data;
+          this.updateServerMessage(errorData);
+          logout(); // 토큰 유효성 검사 실패시 로그아웃 처리
+          return;
         });
     },
   },

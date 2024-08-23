@@ -1,8 +1,12 @@
 <template>
-  <div id="modal">알림</div>
-  <!-- 메시지를 넣음 -->
-  <p>{{ serverMessage.message }}</p>
-  <input type="button" value="닫기" @click="store.deleteServerMessage" />
+  <div id="modal-background" class="modal-background">
+    <div id="modal" class="modal">
+      <div id="modal-title">알림</div>
+      <!-- 메시지를 넣음 -->
+      <p>{{ serverMessage.message }}</p>
+      <input type="button" value="닫기" @click="store.deleteServerMessage" />
+    </div>
+  </div>
 </template>
 
 <script setup>

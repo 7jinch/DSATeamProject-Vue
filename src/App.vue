@@ -2,7 +2,6 @@
   <!-- router에 지정한 url에 맞춰서 컴포넌트를 렌더링함 -->
   <div id="inAppBody" class="inAppBody">
     <router-view />
-    <Footer />
     <modal v-if="isShowModal" />
   </div>
 </template>

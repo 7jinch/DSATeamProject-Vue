@@ -1,10 +1,13 @@
 // 라우팅하는 모듈
 import { createRouter, createWebHistory } from 'vue-router'; // vue router 불러오기
+import { useStore } from '../store/store';
+import { storeToRefs } from 'pinia';
 
-import MainPage from '../pages/MainPage.vue'; // 메인 페이지
-import MemberSignupPage from '../pages/MemberSignupPage.vue'; // 회원가입 페이지
-import MemberLoginPage from '../pages/MemberLoginPage.vue'; // 로그인 페이지
-import MemberFindPasswordPage from '../pages/MemberFindPasswordPage.vue'; // 비밀번호 찾기 페이지
+import MainPage from '../pages/member/MainPage.vue'; // 메인 페이지
+import MemberSignupPage from '../pages/member/MemberSignupPage.vue'; // 회원가입 페이지
+import MemberLoginPage from '../pages/member/MemberLoginPage.vue'; // 로그인 페이지
+import MemberFindPasswordPage from '../pages/member/MemberFindPasswordPage.vue'; // 비밀번호 찾기 페이지
+import MemberProfilePage from '../pages/member/MemberProfilePage.vue'; // 프로필 페이지
 
 // 라우터 인스턴스를 생성해서 router 변수에 할당
 const router = createRouter({
@@ -15,7 +18,25 @@ const router = createRouter({
     { path: '/member/signup', component: MemberSignupPage },
     { path: '/member/login', component: MemberLoginPage },
     { path: '/member/findpassword', component: MemberFindPasswordPage },
+    {
+      path: '/member/profile',
+      component: MemberProfilePage,
+      beforeEnter: async (to, from, next) => {
+        const store = useStore();
+        const { loggedInUser } = storeToRefs(store);
+        const result = await store.validateJwtToken(loggedInUser.value.email);
+        if (result) next(); // 유효한 토큰일 경우 프로필 페이지로 이동
+        else next({ path: '/member/login' }); // 유효하지 않은 토큰일 경우 로그인 페이지로 이동
+      },
+    },
   ],
+});
+
+// router 전역 가드
+router.beforeEach((to, from, next) => {
+  const store = useStore();
+  store.deleteServerMessage();
+  next();
 });
 
 export default router;

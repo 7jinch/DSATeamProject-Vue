@@ -3,7 +3,7 @@ const regEx = (type) => {
   let reg = null;
 
   if (type === 'email') {
-    reg = new RegExp('^[a-zA-Z0-9_]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$'); // email 정규표현식
+    reg = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'); // email 정규표현식
   } else if (type === 'password') {
     reg = new RegExp('^.{6,12}$'); // password 정규표현식
   } else if (type === 'phoneNumber') {
