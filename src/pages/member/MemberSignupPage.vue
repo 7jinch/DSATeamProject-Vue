@@ -231,7 +231,6 @@ const signupCheck = async () => {
     return;
   } else if (!regEx('phoneNumber').test(inputText.value.phone_number)) {
     initialization();
-    console.log('error');
     errorMessage.value.phone_number =
       '전화번호의 형식에 맞춰서 입력해 주세요. (예시. 000-0000-0000)';
     return;

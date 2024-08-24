@@ -74,12 +74,12 @@ const moveHome = () => tmpRouter.push('/');
 const movePage = (event) => {
   const pageName = event.target.value;
   if (pageName === '회원가입') tmpRouter.push('/member/signup');
-  if (pageName === '로그인') tmpRouter.push('/member/login');
-  if (pageName === '로그아웃') {
+  else if (pageName === '로그인') tmpRouter.push('/member/login');
+  else if (pageName === '로그아웃') {
     store.logout();
     tmpRouter.push('/');
-  }
-  if (pageName === '프로필 보기') tmpRouter.push('/member/profile');
+  } else if (pageName === '프로필 보기')
+    tmpRouter.push(`/member/profile/${loggedInUser.value.member_id}`);
 };
 
 const showProfileMenu = () => (profileMenuFlag.value = !profileMenuFlag.value);

@@ -16,6 +16,7 @@ export const useStore = defineStore('store', {
 
     // 로그인 한 유저 정보
     loggedInUser: {
+      member_id: '',
       email: '',
       name: '',
       birth: '',
@@ -74,6 +75,7 @@ export const useStore = defineStore('store', {
           withCredentials: true, // reponse시 쿠키가 있으면 받음
         })
         .then((response) => {
+          this.loggedInUser.member_id = response.data.member_id; // 상태값에 아이디 정보 저장
           this.loggedInUser.email = response.data.email; // 상태값에 이메일 정보 저장
           this.loggedInUser.name = response.data.name; // 상태값에 이름 정보 저장
           this.loggedInUser.birth = response.data.birth; // 상태값에 생년월일 정보 저장
@@ -164,12 +166,28 @@ export const useStore = defineStore('store', {
             },
           }
         )
-        .then((response) => true)
+        .then((response) => true) // 토큰 유효성 검사 성공하면 true
         .catch((error) => {
           const errorData = error.response.data;
           this.updateServerMessage(errorData);
           logout(); // 토큰 유효성 검사 실패시 로그아웃 처리
           return;
+        });
+    },
+
+    async getUserData(member_id) {
+      const url =
+        import.meta.env.VITE_SPRING_BOOT_URL + `/api/members/${member_id}`;
+
+      return await axios
+        .get(url)
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          const errorData = error.response.data;
+          this.updateServerMessage(errorData);
+          return false;
         });
     },
   },

@@ -19,15 +19,17 @@ const router = createRouter({
     { path: '/member/login', component: MemberLoginPage },
     { path: '/member/findpassword', component: MemberFindPasswordPage },
     {
-      path: '/member/profile',
+      path: '/member/profile/:member_id',
       component: MemberProfilePage,
-      beforeEnter: async (to, from, next) => {
-        const store = useStore();
-        const { loggedInUser } = storeToRefs(store);
-        const result = await store.validateJwtToken(loggedInUser.value.email);
-        if (result) next(); // 유효한 토큰일 경우 프로필 페이지로 이동
-        else next({ path: '/member/login' }); // 유효하지 않은 토큰일 경우 로그인 페이지로 이동
-      },
+      // props: true, // member_id를 props로 전달
+      // key: (route) => route.params.member_id, // 컴포넌트 강제 리렌더링:
+      // beforeEnter: async (to, from, next) => {
+      //   const store = useStore();
+      //   const { loggedInUser } = storeToRefs(store);
+      //   const result = await store.validateJwtToken(loggedInUser.value.email);
+      //   if (result) next(); // 유효한 토큰일 경우 프로필 페이지로 이동
+      //   else next({ path: '/member/login' }); // 유효하지 않은 토큰일 경우 로그인 페이지로 이동
+      // },
     },
   ],
 });
